@@ -1,0 +1,16 @@
+/* components/ui/Card.module.css */
+.card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  transition: border-color var(--transition-base);
+}
+.card.hoverable:hover {
+  border-color: var(--border-strong);
+}
+.card.flat {
+  box-shadow: none;
+  border: none;
+  background: var(--surface-page);
+}

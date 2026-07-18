@@ -1,0 +1,115 @@
+:root {
+  /* ── Color palette (raw values, don't use these directly in components) ── */
+  --raw-purple-light: #a78bfa;
+  --raw-purple-mid:   #7c3aed;
+  --raw-purple-dark:  #4c1d95;
+
+  --raw-teal-light:   #5eead4;
+  --raw-teal-mid:     #0d9488;
+  --raw-teal-dark:    #134e4a;
+
+  --raw-gray-50:      #f9fafb;
+  --raw-gray-100:     #f3f4f6;
+  --raw-gray-200:     #e5e7eb;
+  --raw-gray-300:     #d1d5db;
+  --raw-gray-400:     #9ca3af;
+  --raw-gray-500:     #6b7280;
+  --raw-gray-600:     #4b5563;
+  --raw-gray-700:     #374151;
+  --raw-gray-800:     #1f2937;
+  --raw-gray-900:     #111827;
+  --raw-gray-950:     #030712;
+
+  --raw-green:        #22c55e;
+  --raw-red:          #ef4444; 
+  --raw-amber:        #f59e0b;
+
+  /* ── Semantic surface tokens (light mode) ── */
+  --surface-page:     var(--raw-gray-50);
+  --surface-card:     #ffffff;
+  --surface-elevated: #ffffff;
+  --surface-input:    #ffffff;
+
+  /* ── Text tokens (light mode) ── */
+  --text-primary:     var(--raw-gray-900);
+  --text-secondary:   var(--raw-gray-600);
+  --text-muted:       var(--raw-gray-400);
+  --text-inverse:     #ffffff;
+  --text-accent:      var(--raw-purple-mid);
+
+  /* ── Border tokens ── */
+  --border-default:   var(--raw-gray-200);
+  --border-strong:    var(--raw-gray-300);
+  --border-accent:    var(--raw-purple-light);
+
+  /* ── Brand/accent tokens ── */
+  --accent:           var(--raw-purple-mid);
+  --accent-hover:     var(--raw-purple-dark);
+  --accent-subtle:    #ede9fe;
+  --accent-text:      var(--raw-purple-mid);
+
+  /* ── State colors ── */
+  --color-success:    var(--raw-green);
+  --color-error:      var(--raw-red);
+  --color-warning:    var(--raw-amber);
+
+  /* ── Spacing scale (4px base unit) ── */
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   20px;
+  --space-6:   24px;
+  --space-8:   32px;
+  --space-10:  40px;
+  --space-12:  48px;
+  --space-16:  64px;
+
+  /* ── Border radius ── */
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   14px;
+  --radius-xl:   20px;
+  --radius-full: 9999px;
+
+  /* ── Shadows — very subtle, no heavy drop shadows ── */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+
+  /* ── Transitions ── */
+  --transition-fast:   0.1s ease;
+  --transition-base:   0.18s ease;
+  --transition-slow:   0.3s ease;
+
+  /* ── Z-index scale ── */
+  --z-base:    1;
+  --z-dropdown: 100;
+  --z-modal:   200;
+  --z-toast:   300;
+}
+
+/* ── Dark mode: only override semantic tokens, never raw palette ── */
+[data-theme="dark"] {
+  --surface-page:     var(--raw-gray-950);
+  --surface-card:     var(--raw-gray-900);
+  --surface-elevated: var(--raw-gray-800);
+  --surface-input:    var(--raw-gray-800);
+
+  --text-primary:     var(--raw-gray-50);
+  --text-secondary:   var(--raw-gray-400);
+  --text-muted:       var(--raw-gray-600);
+  --text-inverse:     var(--raw-gray-900);
+  --text-accent:      var(--raw-purple-light);
+
+  --border-default:   var(--raw-gray-700);
+  --border-strong:    var(--raw-gray-600);
+  --border-accent:    var(--raw-purple-mid);
+
+  --accent:           var(--raw-purple-light);
+  --accent-hover:     #c4b5fd;
+  --accent-subtle:    #2e1065;
+  --accent-text:      var(--raw-purple-light);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.2);
+}
