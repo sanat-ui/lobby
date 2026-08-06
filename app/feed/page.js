@@ -1,5 +1,6 @@
 // app/feed/page.js
 'use client'
+import NotificationBell from '../../components/ui/NotificationBell'
 import { useState, useEffect, useRef, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { getUser, getProfile, getLFGPosts, signOut, supabase } from '../../lib/supabase'
@@ -117,9 +118,9 @@ function FeedContent() {
       <nav className={styles.navbar}>
         <span className={styles.logo}>LOBBY</span>
         <div className={styles.navRight}>
-          <button className={styles.navBtn} onClick={handleSignOut}>
-            SIGN OUT
-          </button>
+          <button className={styles.navBtn} onClick={() => router.push('/messages')}>💬 DMS</button>
+          <NotificationBell userId={currentUser?.id} />
+          <button className={styles.navBtn} onClick={handleSignOut}>SIGN OUT</button>
           <div className={styles.avatarBtn}>
             {getInitials(profile.display_name)}
           </div>

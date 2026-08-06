@@ -1,0 +1,142 @@
+/* components/ui/NotificationBell.module.css */
+.wrapper {
+  position: relative;
+}
+
+.bell {
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: 2px solid #111;
+  box-shadow: 3px 3px 0px #888;
+  color: #111;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s, box-shadow 0.1s;
+  position: relative;
+}
+.bell:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px #888;
+}
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #111;
+  color: #fff;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  padding: 2px 5px;
+  min-width: 16px;
+  text-align: center;
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 320px;
+  background: #fff;
+  border: 3px solid #111;
+  box-shadow: 6px 6px 0px #888;
+  z-index: 200;
+}
+
+.dropdownBar {
+  background: #111;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dropdownTitle {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.clearBtn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  color: #888;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+.clearBtn:hover { color: #fff; }
+
+.list {
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.item {
+  padding: 12px 16px;
+  border-bottom: 2px solid #F5F5F5;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.item:hover { background: #F5F5F5; }
+.item:last-child { border-bottom: none; }
+.item.unread { background: #fafafa; border-left: 3px solid #111; }
+
+.itemTitle {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  color: #111;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+  line-height: 1.6;
+}
+
+.itemBody {
+  font-family: 'VT323', monospace;
+  font-size: 15px;
+  color: #555;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.itemTime {
+  font-family: 'VT323', monospace;
+  font-size: 13px;
+  color: #aaa;
+  letter-spacing: 1px;
+}
+
+.itemActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.actionBtn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  padding: 5px 10px;
+  border: 2px solid #111;
+  box-shadow: 2px 2px 0px #888;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: transform 0.1s;
+  background: #111;
+  color: #fff;
+}
+.actionBtn:hover { transform: translate(-1px, -1px); }
+
+.empty {
+  padding: 32px 16px;
+  text-align: center;
+  font-family: 'VT323', monospace;
+  font-size: 16px;
+  color: #aaa;
+  letter-spacing: 2px;
+}

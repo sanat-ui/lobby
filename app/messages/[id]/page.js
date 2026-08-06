@@ -1,5 +1,6 @@
 // app/messages/[id]/page.js
 'use client'
+import NotificationBell from '../../components/ui/NotificationBell'
 import { useState, useEffect, useRef } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
