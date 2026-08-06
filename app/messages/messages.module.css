@@ -1,0 +1,213 @@
+/* app/messages/messages.module.css */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap');
+
+.page {
+  min-height: 100vh;
+  background: #F5F5F5;
+}
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #F5F5F5;
+  border-bottom: 3px solid #111;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.backBtn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: #111;
+  background: transparent;
+  border: 2px solid #111;
+  box-shadow: 3px 3px 0px #888;
+  padding: 8px 12px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: transform 0.1s, box-shadow 0.1s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+.backBtn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px #888;
+  text-decoration: none;
+  color: #111;
+}
+
+.navTitle {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 12px;
+  color: #111;
+  letter-spacing: 2px;
+}
+
+.body {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.window {
+  border: 3px solid #111;
+  box-shadow: 6px 6px 0px #888;
+  background: #fff;
+}
+
+.windowBar {
+  background: #111;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.windowTitle {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.windowDots {
+  display: flex;
+  gap: 4px;
+}
+.windowDot {
+  width: 8px;
+  height: 8px;
+  border: 1px solid #fff;
+}
+
+.convList {
+  display: flex;
+  flex-direction: column;
+}
+
+.convItem {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 20px;
+  border-bottom: 2px solid #F5F5F5;
+  cursor: pointer;
+  transition: background 0.1s;
+  text-decoration: none;
+}
+.convItem:hover { background: #F5F5F5; }
+.convItem:last-child { border-bottom: none; }
+
+.convAvatar {
+  width: 44px;
+  height: 44px;
+  background: #F5F5F5;
+  border: 2px solid #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  color: #111;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.convAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.convInfo { flex: 1; min-width: 0; }
+
+.convName {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: #111;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.convPreview {
+  font-family: 'VT323', monospace;
+  font-size: 16px;
+  color: #888;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.convMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.convTime {
+  font-family: 'VT323', monospace;
+  font-size: 14px;
+  color: #aaa;
+  letter-spacing: 1px;
+}
+
+.unreadBadge {
+  background: #111;
+  color: #fff;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  padding: 3px 7px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.empty {
+  text-align: center;
+  padding: 60px 24px;
+}
+
+.emptyIcon {
+  font-size: 40px;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.emptyTitle {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  color: #111;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+
+.emptyText {
+  font-family: 'VT323', monospace;
+  font-size: 17px;
+  color: #888;
+  letter-spacing: 1px;
+}
+
+.loader {
+  text-align: center;
+  padding: 48px;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  color: #888;
+  letter-spacing: 3px;
+}

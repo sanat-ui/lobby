@@ -1,0 +1,264 @@
+/* app/messages/[id]/chat.module.css */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap');
+
+.page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #F5F5F5;
+  overflow: hidden;
+}
+
+.navbar {
+  background: #F5F5F5;
+  border-bottom: 3px solid #111;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.backBtn {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: #111;
+  background: transparent;
+  border: 2px solid #111;
+  box-shadow: 3px 3px 0px #888;
+  padding: 8px 12px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: transform 0.1s, box-shadow 0.1s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.backBtn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px #888;
+  text-decoration: none;
+  color: #111;
+}
+
+.navInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.navAvatar {
+  width: 36px;
+  height: 36px;
+  background: #F5F5F5;
+  border: 2px solid #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: #111;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.navAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.navName {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: #111;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Messages area */
+.messagesArea {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 680px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.dateDivider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0;
+}
+.dateDivider::before,
+.dateDivider::after {
+  content: '';
+  flex: 1;
+  height: 2px;
+  background: #ddd;
+}
+.dateDividerText {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  color: #aaa;
+  letter-spacing: 1px;
+  white-space: nowrap;
+}
+
+/* Message bubble */
+.msgRow {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+}
+.msgRow.own {
+  flex-direction: row-reverse;
+}
+
+.msgAvatar {
+  width: 28px;
+  height: 28px;
+  background: #F5F5F5;
+  border: 2px solid #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 7px;
+  color: #111;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.msgAvatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.msgBubble {
+  max-width: 65%;
+  padding: 10px 14px;
+  border: 2px solid #111;
+  box-shadow: 3px 3px 0px #888;
+  background: #fff;
+  position: relative;
+}
+.msgRow.own .msgBubble {
+  background: #111;
+  color: #fff;
+  box-shadow: 3px 3px 0px #555;
+}
+
+.msgContent {
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  color: #111;
+  letter-spacing: 1px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+.msgRow.own .msgContent {
+  color: #fff;
+}
+
+.msgTime {
+  font-family: 'VT323', monospace;
+  font-size: 12px;
+  color: #aaa;
+  letter-spacing: 1px;
+  margin-top: 4px;
+  display: block;
+}
+.msgRow.own .msgTime {
+  color: #888;
+  text-align: right;
+}
+
+/* Optimistic message (not yet confirmed) */
+.msgBubble.pending {
+  opacity: 0.6;
+}
+
+.loader {
+  text-align: center;
+  padding: 32px;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  color: #888;
+  letter-spacing: 3px;
+}
+
+/* Input area */
+.inputArea {
+  border-top: 3px solid #111;
+  background: #F5F5F5;
+  padding: 16px 24px;
+  flex-shrink: 0;
+}
+
+.inputRow {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.input {
+  flex: 1;
+  min-height: 44px;
+  max-height: 120px;
+  padding: 12px 14px;
+  border: 3px solid #111;
+  background: #fff;
+  color: #111;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  letter-spacing: 1px;
+  outline: none;
+  resize: none;
+  line-height: 1.4;
+  transition: box-shadow 0.1s;
+}
+.input:focus {
+  box-shadow: 3px 3px 0px #888;
+}
+.input::placeholder { color: #bbb; }
+
+.sendBtn {
+  height: 44px;
+  padding: 0 20px;
+  background: #111;
+  color: #fff;
+  border: 3px solid #111;
+  box-shadow: 4px 4px 0px #888;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.sendBtn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0px #888;
+}
+.sendBtn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 2px 2px 0px #888;
+}
+.sendBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
