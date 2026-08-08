@@ -29,27 +29,27 @@ export default function NotificationBell({ userId }) {
 
   const unread = notifications.filter(n => !n.read).length
 
-  useEffect(() => {
-    if (!userId) return
-    loadNotifications()
+useEffect(() => {
+  if (!userId) return
+  loadNotifications()
 
-    // Realtime
-    const channel = supabase
-      .channel(`notifications:${userId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'notifications',
-          filter: `user_id=eq.${userId}`
-        },
-        () => loadNotifications()
-      )
-      .subscribe()
+  const channel = supabase
+    .channel(`notifications:${userId}`)
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'notifications',
+      filter: `user_id=eq.${userId}`
+    }, () => loadNotifications())
+    .on('postgres_changes', {
+      event: 'UPDATE',
+      schema: 'public',
+      table: 'conversations',
+    }, () => loadNotifications())
+    .subscribe()
 
-    return () => supabase.removeChannel(channel)
-  }, [userId])
+  return () => supabase.removeChannel(channel)
+}, [userId])
 
   // Close on outside click
   useEffect(() => {
