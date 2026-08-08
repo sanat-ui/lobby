@@ -13,7 +13,7 @@ import {
 import styles from './NotificationBell.module.css'
 
 
-const unread = notifications.filter(n => !n.read).length + unreadDMs
+
 
 function timeAgo(iso) {
   const diff = Date.now() - new Date(iso).getTime()
@@ -30,8 +30,8 @@ export default function NotificationBell({ userId }) {
   const [open, setOpen] = useState(false)
   const [notifications, setNotifications] = useState([])
   const wrapperRef = useRef(null)
-
-  const unread = notifications.filter(n => !n.read).length
+  const unread = notifications.filter(n => !n.read).length + unreadDMs
+  
 
 useEffect(() => {
   if (!userId) return
