@@ -6,7 +6,8 @@ import {
   markNotificationRead,
   markAllNotificationsRead,
   getOrCreateConversation,
-  getUnreadCount,
+  acceptJoinRequest,
+  declineJoinRequest,
   supabase
 } from '../../lib/supabase'
 import styles from './NotificationBell.module.css'
@@ -25,13 +26,11 @@ export default function NotificationBell({ userId }) {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [notifications, setNotifications] = useState([])
-  const [unreadDMs, setUnreadDMs] = useState(0)
+  const [actionLoading, setActionLoading] = useState(null)
   const wrapperRef = useRef(null)
 
-  // This must come AFTER both state declarations
-  const unread = notifications.filter(n => !n.read).length + unreadDMs
+  const unread = notifications.filter(n => !n.read).length
 
-  // Notifications realtime
   useEffect(() => {
     if (!userId) return
     loadNotifications()
@@ -49,24 +48,6 @@ export default function NotificationBell({ userId }) {
     return () => supabase.removeChannel(channel)
   }, [userId])
 
-  // DM unread count realtime
-  useEffect(() => {
-    if (!userId) return
-    loadDMs()
-
-    const dmChannel = supabase
-      .channel(`bell-dms-${userId}`)
-      .on('postgres_changes', {
-        event: 'UPDATE',
-        schema: 'public',
-        table: 'conversations'
-      }, () => loadDMs())
-      .subscribe()
-
-    return () => supabase.removeChannel(dmChannel)
-  }, [userId])
-
-  // Close on outside click
   useEffect(() => {
     function handleClick(e) {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
@@ -82,19 +63,44 @@ export default function NotificationBell({ userId }) {
     if (data) setNotifications(data)
   }
 
-  async function loadDMs() {
-    const { count } = await getUnreadCount(userId)
-    setUnreadDMs(count || 0)
-  }
+  async function handleAccept(e, notif) {
+    e.stopPropagation()
+    const postId = notif.data?.post_id
+    const requesterId = notif.data?.requester_id
+    if (!postId || !requesterId) return
 
-  async function handleNotificationClick(notif) {
+    setActionLoading(notif.id + '_accept')
+    await acceptJoinRequest(postId, requesterId)
     await markNotificationRead(notif.id)
     setNotifications(prev =>
-      prev.map(n => n.id === notif.id ? { ...n, read: true } : n)
+      prev.map(n => n.id === notif.id
+        ? { ...n, read: true, data: { ...n.data, resolved: true, resolution: 'accepted' } }
+        : n
+      )
     )
+    setActionLoading(null)
   }
 
-  async function handleMessage(notif) {
+  async function handleDecline(e, notif) {
+    e.stopPropagation()
+    const postId = notif.data?.post_id
+    const requesterId = notif.data?.requester_id
+    if (!postId || !requesterId) return
+
+    setActionLoading(notif.id + '_decline')
+    await declineJoinRequest(postId, requesterId)
+    await markNotificationRead(notif.id)
+    setNotifications(prev =>
+      prev.map(n => n.id === notif.id
+        ? { ...n, read: true, data: { ...n.data, resolved: true, resolution: 'declined' } }
+        : n
+      )
+    )
+    setActionLoading(null)
+  }
+
+  async function handleMessage(e, notif) {
+    e.stopPropagation()
     await markNotificationRead(notif.id)
     const requesterId = notif.data?.requester_id
     if (!requesterId) return
@@ -139,20 +145,64 @@ export default function NotificationBell({ userId }) {
               notifications.map(notif => (
                 <div
                   key={notif.id}
-                  className={[styles.item, !notif.read ? styles.unread : ''].filter(Boolean).join(' ')}
-                  onClick={() => handleNotificationClick(notif)}
+                  className={[
+                    styles.item,
+                    !notif.read ? styles.unread : ''
+                  ].filter(Boolean).join(' ')}
                 >
                   <div className={styles.itemTitle}>{notif.title}</div>
                   <div className={styles.itemBody}>{notif.body}</div>
                   <div className={styles.itemTime}>{timeAgo(notif.created_at)}</div>
-                  {notif.type === 'join_request' && (
+
+                  {notif.type === 'join_request' && !notif.data?.resolved && (
                     <div className={styles.itemActions}>
                       <button
                         className={styles.actionBtn}
-                        onClick={e => { e.stopPropagation(); handleMessage(notif) }}
+                        style={{ background: '#111', color: '#fff' }}
+                        onClick={e => handleAccept(e, notif)}
+                        disabled={!!actionLoading}
                       >
-                        💬 MESSAGE
+                        {actionLoading === notif.id + '_accept' ? '...' : '✓ ACCEPT'}
                       </button>
+                      <button
+                        className={styles.actionBtn}
+                        style={{ background: 'transparent', color: '#111', boxShadow: '2px 2px 0px #888' }}
+                        onClick={e => handleDecline(e, notif)}
+                        disabled={!!actionLoading}
+                      >
+                        {actionLoading === notif.id + '_decline' ? '...' : '✗ DECLINE'}
+                      </button>
+                      <button
+                        className={styles.actionBtn}
+                        style={{ background: 'transparent', color: '#555', border: '1px solid #ddd', boxShadow: 'none' }}
+                        onClick={e => handleMessage(e, notif)}
+                      >
+                        💬
+                      </button>
+                    </div>
+                  )}
+
+                  {notif.type === 'join_request' && notif.data?.resolved && (
+                    <div style={{
+                      fontFamily: 'monospace',
+                      fontSize: '10px',
+                      color: notif.data.resolution === 'accepted' ? '#22c55e' : '#888',
+                      marginTop: '6px',
+                      letterSpacing: '1px'
+                    }}>
+                      {notif.data.resolution === 'accepted' ? '✓ ACCEPTED' : '✗ DECLINED'}
+                    </div>
+                  )}
+
+                  {notif.type === 'request_accepted' && (
+                    <div style={{
+                      fontFamily: 'monospace',
+                      fontSize: '10px',
+                      color: '#22c55e',
+                      marginTop: '6px',
+                      letterSpacing: '1px'
+                    }}>
+                      ✓ YOU'RE IN
                     </div>
                   )}
                 </div>
