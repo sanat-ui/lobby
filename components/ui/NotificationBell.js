@@ -1,4 +1,3 @@
-// components/ui/NotificationBell.js
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
@@ -11,9 +10,6 @@ import {
   supabase
 } from '../../lib/supabase'
 import styles from './NotificationBell.module.css'
-
-
-
 
 function timeAgo(iso) {
   const diff = Date.now() - new Date(iso).getTime()
@@ -29,31 +25,46 @@ export default function NotificationBell({ userId }) {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [notifications, setNotifications] = useState([])
+  const [unreadDMs, setUnreadDMs] = useState(0)
   const wrapperRef = useRef(null)
+
+  // This must come AFTER both state declarations
   const unread = notifications.filter(n => !n.read).length + unreadDMs
-  
 
-useEffect(() => {
-  if (!userId) return
-  loadNotifications()
+  // Notifications realtime
+  useEffect(() => {
+    if (!userId) return
+    loadNotifications()
 
-  const channel = supabase
-    .channel(`notifications:${userId}`)
-    .on('postgres_changes', {
-      event: 'INSERT',
-      schema: 'public',
-      table: 'notifications',
-      filter: `user_id=eq.${userId}`
-    }, () => loadNotifications())
-    .on('postgres_changes', {
-      event: 'UPDATE',
-      schema: 'public',
-      table: 'conversations',
-    }, () => loadNotifications())
-    .subscribe()
+    const channel = supabase
+      .channel(`notifications:${userId}`)
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'notifications',
+        filter: `user_id=eq.${userId}`
+      }, () => loadNotifications())
+      .subscribe()
 
-  return () => supabase.removeChannel(channel)
-}, [userId])
+    return () => supabase.removeChannel(channel)
+  }, [userId])
+
+  // DM unread count realtime
+  useEffect(() => {
+    if (!userId) return
+    loadDMs()
+
+    const dmChannel = supabase
+      .channel(`bell-dms-${userId}`)
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'conversations'
+      }, () => loadDMs())
+      .subscribe()
+
+    return () => supabase.removeChannel(dmChannel)
+  }, [userId])
 
   // Close on outside click
   useEffect(() => {
@@ -69,6 +80,11 @@ useEffect(() => {
   async function loadNotifications() {
     const { data } = await getNotifications(userId)
     if (data) setNotifications(data)
+  }
+
+  async function loadDMs() {
+    const { count } = await getUnreadCount(userId)
+    setUnreadDMs(count || 0)
   }
 
   async function handleNotificationClick(notif) {
@@ -93,30 +109,6 @@ useEffect(() => {
     await markAllNotificationsRead(userId)
     setNotifications(prev => prev.map(n => ({ ...n, read: true })))
   }
-
-  const [unreadDMs, setUnreadDMs] = useState(0)
-
-  useEffect(() => {
-  if (!userId) return
-
-  async function loadDMs() {
-    const { count } = await getUnreadCount(userId)
-    setUnreadDMs(count)
-  }
-
-  loadDMs()
-
-  const dmChannel = supabase
-    .channel(`bell-dms-${userId}`)
-    .on('postgres_changes', {
-      event: 'UPDATE',
-      schema: 'public',
-      table: 'conversations'
-    }, () => loadDMs())
-    .subscribe()
-
-  return () => supabase.removeChannel(dmChannel)
-}, [userId])
 
   return (
     <div className={styles.wrapper} ref={wrapperRef}>
