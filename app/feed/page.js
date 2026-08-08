@@ -1,9 +1,10 @@
 // app/feed/page.js
 'use client'
 import NotificationBell from '../../components/ui/NotificationBell'
+import { getUnreadCount, supabase } from '../../lib/supabase'
 import { useState, useEffect, useRef, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { getUser, getProfile, getLFGPosts, signOut, supabase } from '../../lib/supabase'
+import { getUser, getProfile, getLFGPosts, signOut } from '../../lib/supabase'
 import LFGCard from '../../components/feed/LFGCard'
 import FilterBar from '../../components/feed/FilterBar'
 import styles from './feed.module.css'
@@ -13,6 +14,7 @@ const PAGE_SIZE = 10
 function FeedContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const [unreadDMs, setUnreadDMs] = useState(0)
 
   const [currentUser, setCurrentUser] = useState(null)
   const [profile, setProfile] = useState(null)
@@ -25,6 +27,28 @@ function FeedContent() {
   const sentinelRef = useRef(null)
   const activeGame = searchParams.get('game') || 'all'
   const activeRank = searchParams.get('rank') || 'all'
+
+  useEffect(() => {
+  if (!currentUser) return
+
+  async function loadUnread() {
+    const { count } = await getUnreadCount(currentUser.id)
+    setUnreadDMs(count)
+  }
+
+  loadUnread()
+
+  const channel = supabase
+    .channel(`unread-${currentUser.id}`)
+    .on('postgres_changes', {
+      event: 'UPDATE',
+      schema: 'public',
+      table: 'conversations'
+    }, () => loadUnread())
+    .subscribe()
+
+  return () => supabase.removeChannel(channel)
+}, [currentUser])
 
   useEffect(() => {
     async function check() {
@@ -118,7 +142,23 @@ function FeedContent() {
       <nav className={styles.navbar}>
         <span className={styles.logo}>LOBBY</span>
         <div className={styles.navRight}>
-          <button className={styles.navBtn} onClick={() => router.push('/messages')}>💬 DMS</button>
+          <button className={styles.navBtn} onClick={() => router.push('/messages')} style={{ position: 'relative' }}>
+            💬 DMS {unreadDMs > 0 && ( <span style={{
+              position: 'absolute',
+              top: '-8px',
+              right: '-8px',
+              background: '#111',
+              color: '#fff',
+              fontFamily: 'monospace',
+              fontSize: '8px',
+              padding: '2px 5px',
+              minWidth: '16px',
+              textAlign: 'center',
+              lineHeight: '1.4'
+              }}>
+                {unreadDMs > 9 ? '9+' : unreadDMs}
+              </span>)}
+          </button>
           <NotificationBell userId={currentUser?.id} />
           <button className={styles.navBtn} onClick={handleSignOut}>SIGN OUT</button>
           <div className={styles.avatarBtn}>

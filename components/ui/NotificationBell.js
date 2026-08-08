@@ -7,9 +7,13 @@ import {
   markNotificationRead,
   markAllNotificationsRead,
   getOrCreateConversation,
+  getUnreadCount,
   supabase
 } from '../../lib/supabase'
 import styles from './NotificationBell.module.css'
+
+
+const unread = notifications.filter(n => !n.read).length + unreadDMs
 
 function timeAgo(iso) {
   const diff = Date.now() - new Date(iso).getTime()
@@ -89,6 +93,30 @@ useEffect(() => {
     await markAllNotificationsRead(userId)
     setNotifications(prev => prev.map(n => ({ ...n, read: true })))
   }
+
+  const [unreadDMs, setUnreadDMs] = useState(0)
+
+  useEffect(() => {
+  if (!userId) return
+
+  async function loadDMs() {
+    const { count } = await getUnreadCount(userId)
+    setUnreadDMs(count)
+  }
+
+  loadDMs()
+
+  const dmChannel = supabase
+    .channel(`bell-dms-${userId}`)
+    .on('postgres_changes', {
+      event: 'UPDATE',
+      schema: 'public',
+      table: 'conversations'
+    }, () => loadDMs())
+    .subscribe()
+
+  return () => supabase.removeChannel(dmChannel)
+}, [userId])
 
   return (
     <div className={styles.wrapper} ref={wrapperRef}>
